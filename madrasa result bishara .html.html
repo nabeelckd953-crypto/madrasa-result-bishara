@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>മദ്രസ മാനേജ്മെന്റ് സിസ്റ്റം</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green-deep:#0B4433;
+    --green-mid:#146B4F;
+    --green-soft:#1E7A5A;
+    --gold:#C7972B;
+    --gold-light:#E4C270;
+    --cream:#FBF6EA;
+    --sand:#F1EAD6;
+    --ink:#1B231F;
+    --ink-soft:#4B564F;
+    --danger:#9B3B33;
+    --radius:14px;
+    --shadow:0 10px 30px -12px rgba(11,68,51,0.35);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Noto Sans Malayalam','Inter',sans-serif;
+    background:var(--sand);
+    color:var(--ink);
+    min-height:100vh;
+  }
+  .hidden{display:none !important;}
+  button{font-family:inherit;cursor:pointer;}
+  input,select{font-family:inherit;}
+
+  /* ---------- Landing ---------- */
+  #landing{
+    min-height:100vh;
+    display:flex;align-items:center;justify-content:center;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(199,151,43,0.18), transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(199,151,43,0.12), transparent 45%),
+      linear-gradient(160deg, var(--green-deep), #072D22 75%);
+    position:relative;
+    overflow:hidden;
+    padding:24px;
+  }
+  #landing .arch{
+    position:absolute;bottom:0;width:180px;height:320px;
+    border:2px solid rgba(228,194,112,0.15);
+    border-bottom:none;
+    border-radius:90px 90px 0 0;
+  }
+  #landing .arch.a1{left:-40px}
+  #landing .arch.a2{right:-40px}
+  #landing .arch.a3{left:50%;transform:translateX(-50%);height:420px;width:220px;border-color:rgba(228,194,112,0.08)}
+  .landing-card{
+    position:relative;z-index:2;
+    max-width:760px;width:100%;
+    text-align:center;
+  }
+  .brand-star{width:34px;height:34px;margin:0 auto 18px;opacity:.9}
+  .landing-card h1{
+    font-family:'Cormorant Garamond',serif;
+    color:var(--cream);
+    font-size:2.6rem;
+    margin:0 0 6px;
+    letter-spacing:.5px;
+  }
+  .landing-card p.tag{
+    color:var(--gold-light);
+    font-size:.95rem;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    margin:0 0 40px;
+  }
+  .choice-row{display:flex;gap:22px;justify-content:center;flex-wrap:wrap;}
+  .choice-card{
+    background:rgba(251,246,234,0.06);
+    border:1px solid rgba(228,194,112,0.35);
+    border-radius:var(--radius);
+    padding:30px 28px;
+    width:270px;
+    text-align:left;
+    transition:transform .25s ease, background .25s ease, border-color .25s ease;
+    color:var(--cream);
+  }
+  .choice-card:hover{transform:translateY(-4px);background:rgba(251,246,234,0.1);border-color:var(--gold);}
+  .choice-card .ico{font-size:1.6rem;margin-bottom:14px;display:block;color:var(--gold-light)}
+  .choice-card h3{margin:0 0 8px;font-size:1.15rem;font-weight:700}
+  .choice-card p{margin:0 0 18px;font-size:.88rem;color:rgba(251,246,234,0.75);line-height:1.5}
+  .choice-card .btn{
+    display:inline-block;background:var(--gold);color:var(--green-deep);
+    padding:9px 18px;border-radius:999px;font-weight:700;font-size:.85rem;border:none;
+  }
+
+  /* ---------- Shared components ---------- */
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:.82rem;color:var(--ink-soft);margin-bottom:6px;font-weight:600}
+  .field input, .field select{
+    width:100%;padding:10px 12px;border:1.5px solid #DDD3B8;border-radius:9px;
+    background:#fff;font-size:.95rem;color:var(--ink);
+  }
+  .field input:focus, .field select:focus{outline:none;border-color:var(--green-mid);}
+  .btn-primary{
+    background:var(--green-deep);color:#fff;border:none;padding:11px 22px;border-radius:9px;
+    font-weight:700;font-size:.9rem;letter-spacing:.3px;
+  }
+  .btn-primary:hover{background:var(--green-mid);}
+  .btn-gold{
+    background:var(--gold);color:var(--green-deep);border:none;padding:11px 22px;border-radius:9px;
+    font-weight:700;font-size:.9rem;
+  }
+  .btn-gold:hover{background:var(--gold-light);}
+  .btn-outline{
+    background:transparent;border:1.5px solid var(--green-deep);color:var(--green-deep);
+    padding:9px 16px;border-radius:9px;font-weight:600;font-size:.85rem;
+  }
+  .btn-danger{background:transparent;border:1.5px solid var(--danger);color:var(--danger);padding:6px 12px;border-radius:7px;font-size:.78rem;font-weight:600}
+  .card{background:#fff;border-radius:var(--radius);padding:22px;box-shadow:0 4px 18px -8px rgba(27,35,31,0.12);}
+  .grade-pill{display:inline-block;padding:4px 12px;border-radius:999px;font-weight:700;font-size:.8rem;}
+  .grade-Aplus{background:#E4F4EC;color:#0B4433}
+  .grade-A{background:#EAF6E0;color:#2F6B1F}
+  .grade-Bplus{background:#FFF3D6;color:#8A6300}
+  .grade-B{background:#FFEAD4;color:#9A5300}
+  .grade-C{background:#FBE4DD;color:#9B3B14}
+  .grade-D{background:#FBE0DE;color:#9B3B33}
+  table{width:100%;border-collapse:collapse;font-size:.88rem;}
+  th{text-align:left;color:var(--ink-soft);font-weight:700;padding:10px 12px;border-bottom:2px solid var(--sand);font-size:.78rem;text-transform:uppercase;letter-spacing:.4px;}
+  td{padding:10px 12px;border-bottom:1px solid #EFE9D8;}
+  .toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+    background:var(--green-deep);color:#fff;padding:12px 22px;border-radius:10px;font-size:.88rem;
+    box-shadow:var(--shadow);z-index:999;opacity:0;transition:opacity .3s ease, transform .3s ease;pointer-events:none;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(-6px);}
+  .empty{padding:36px 20px;text-align:center;color:var(--ink-soft);}
+  .star-icn{color:var(--gold);margin-right:6px;}
+
+  /* ---------- Admin shell ---------- */
+  #admin-shell{display:flex;min-height:100vh;}
+  .sidebar{
+    width:250px;background:var(--green-deep);color:var(--cream);flex-shrink:0;
+    display:flex;flex-direction:column;padding:22px 14px;
+  }
+  .sidebar .brand{display:flex;align-items:center;gap:10px;padding:6px 10px 22px;border-bottom:1px solid rgba(228,194,112,0.2);margin-bottom:14px;}
+  .sidebar .brand svg{flex-shrink:0}
+  .sidebar .brand-name{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:700;line-height:1.2}
+  .nav-item{
+    display:flex;align-items:center;gap:11px;padding:11px 14px;border-radius:9px;color:rgba(251,246,234,0.78);
+    font-size:.88rem;font-weight:600;cursor:pointer;margin-bottom:3px;border:none;background:none;width:100%;text-align:left;
+  }
+  .nav-item svg{flex-shrink:0;opacity:.85}
+  .nav-item:hover{background:rgba(251,246,234,0.07);color:#fff;}
+  .nav-item.active{background:var(--gold);color:var(--green-deep);}
+  .nav-item.active svg{opacity:1}
+  .sidebar-foot{margin-top:auto;padding-top:14px;border-top:1px solid rgba(228,194,112,0.2);}
+  .logout-btn{color:rgba(251,246,234,0.6);font-size:.8rem;background:none;border:none;padding:10px 14px;width:100%;text-align:left;}
+  .logout-btn:hover{color:#fff}
+
+  .admin-main{flex:1;padding:30px 38px;max-width:1180px;}
+  .admin-topbar{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:26px;}
+  .admin-topbar h2{font-family:'Cormorant Garamond',serif;font-size:1.9rem;margin:0;color:var(--green-deep);}
+  .admin-topbar p{margin:2px 0 0;color:var(--ink-soft);font-size:.86rem;}
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:26px;}
+  .stat-card{background:#fff;border-radius:12px;padding:18px 20px;box-shadow:0 4px 18px -8px rgba(27,35,31,0.1);border-left:4px solid var(--gold);}
+  .stat-card .n{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;color:var(--green-deep);}
+  .stat-card .l{font-size:.8rem;color:var(--ink-soft);margin-top:2px;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 18px;}
+  .section-title{font-weight:700;color:var(--green-deep);margin:0 0 14px;font-size:1.02rem;display:flex;align-items:center;}
+  .inline-form{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:18px;}
+  .inline-form .field{margin-bottom:0;min-width:150px;flex:1;}
+  .tag-chip{display:inline-flex;align-items:center;gap:8px;background:var(--sand);border-radius:999px;padding:6px 12px 6px 14px;font-size:.82rem;margin:4px 6px 0 0;}
+  .tag-chip button{background:none;border:none;color:var(--danger);font-weight:700;font-size:.9rem;line-height:1;}
+  .avatar{width:38px;height:38px;border-radius:50%;object-fit:cover;background:var(--sand);}
+  .avatar-placeholder{width:38px;height:38px;border-radius:50%;background:var(--sand);display:flex;align-items:center;justify-content:center;color:var(--ink-soft);font-size:.75rem;font-weight:700;}
+  @media (max-width:880px){
+    #admin-shell{flex-direction:column;}
+    .sidebar{width:100%;flex-direction:row;overflow-x:auto;padding:12px;}
+    .sidebar .brand{display:none}
+    .nav-item{white-space:nowrap;margin-bottom:0;margin-right:4px;}
+    .sidebar-foot{display:none}
+    .admin-main{padding:20px;}
+    .form-grid,.row2{grid-template-columns:1fr;}
+  }
+
+  /* ---------- Student portal ---------- */
+  #student-portal{
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(199,151,43,0.12), transparent 40%),
+      linear-gradient(180deg, var(--green-deep), #0E5A43 100%);
+    padding:40px 18px;
+  }
+  .sp-wrap{max-width:600px;margin:0 auto;}
+  .sp-back{color:var(--gold-light);background:none;border:none;font-size:.85rem;margin-bottom:18px;font-weight:600;}
+  .sp-head{text-align:center;margin-bottom:26px;}
+  .sp-head h1{font-family:'Cormorant Garamond',serif;color:var(--cream);font-size:1.9rem;margin:0 0 6px;}
+  .sp-head p{color:var(--gold-light);font-size:.85rem;letter-spacing:1px;text-transform:uppercase;margin:0;}
+  .sp-search{background:#fff;border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);display:flex;gap:10px;}
+  .sp-search input{flex:1;padding:12px 14px;border-radius:9px;border:1.5px solid #DDD3B8;font-size:1rem;}
+  .sp-result{background:#fff;border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);margin-top:18px;}
+  .sp-student-head{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:18px;border-bottom:1px dashed #DDD3B8;}
+  .sp-avatar{width:76px;height:76px;border-radius:50%;object-fit:cover;border:3px solid var(--gold-light);flex-shrink:0;background:var(--sand);}
+  .sp-student-head h3{margin:0 0 2px;font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--green-deep);}
+  .sp-student-head p{margin:0;color:var(--ink-soft);font-size:.85rem;}
+  .upload-box{border:2px dashed var(--gold);border-radius:12px;padding:16px;text-align:center;background:#FFFBF0;margin-bottom:20px;}
+  .upload-box p{margin:0 0 10px;font-size:.85rem;color:var(--ink-soft);}
+  .sp-summary{display:flex;gap:14px;flex-wrap:wrap;margin:18px 0;}
+  .sp-sum-card{flex:1;min-width:110px;background:var(--sand);border-radius:10px;padding:14px;text-align:center;}
+  .sp-sum-card .v{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:700;color:var(--green-deep);}
+  .sp-sum-card .k{font-size:.75rem;color:var(--ink-soft);margin-top:2px;}
+  .err-msg{color:var(--danger);font-size:.85rem;margin-top:10px;}
+
+  /* certificate preview modal */
+  #cert-modal-overlay{position:fixed;inset:0;background:rgba(11,25,20,0.6);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px;}
+  #cert-modal{background:#fff;border-radius:16px;padding:20px;max-width:640px;width:100%;text-align:center;}
+  #cert-modal canvas{width:100%;height:auto;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.15);}
+  .modal-actions{display:flex;gap:10px;justify-content:center;margin-top:16px;}
+  .close-x{position:absolute;top:14px;right:18px;background:none;border:none;font-size:1.3rem;color:var(--ink-soft);}
+</style>
+</head>
+<body>
+
+<!-- ============ LANDING ============ -->
+<div id="landing">
+  <div class="arch a1"></div><div class="arch a3"></div><div class="arch a2"></div>
+  <div class="landing-card">
+    <svg class="brand-star" viewBox="0 0 24 24" fill="none"><path d="M12 1l2.6 6.9L21.5 9l-5.4 4.6L17.8 21 12 17.1 6.2 21l1.7-7.4L2.5 9l6.9-1.1L12 1z" stroke="#E4C270" stroke-width="1.4" stroke-linejoin="round"/></svg>
+    <h1 id="landing-inst-name">മദ്രസ മാനേജ്മെന്റ് സിസ്റ്റം</h1>
+    <p class="tag">Result &amp; Certificate Portal</p>
+    <div class="choice-row">
+      <div class="choice-card">
+        <span class="ico">&#9998;</span>
+        <h3>അഡ്മിൻ</h3>
+        <p>സ്ഥാപന വിവരങ്ങൾ, വിദ്യാർത്ഥികൾ, മാർക്ക്, റിസൾട്ട് എന്നിവ കൈകാര്യം ചെയ്യുക.</p>
+        <button class="btn" onclick="showAdminLogin()">അഡ്മിൻ ലോഗിൻ</button>
+      </div>
+      <div class="choice-card">
+        <span class="ico">&#127891;</span>
+        <h3>വിദ്യാർത്ഥി</h3>
+        <p>രജിസ്റ്റർ നമ്പർ നൽകി റിസൾട്ടും സർട്ടിഫിക്കറ്റും കാണുക.</p>
+        <button class="btn" onclick="showStudentPortal()">റിസൾട്ട് നോക്കുക</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ADMIN LOGIN ============ -->
+<div id="admin-login" class="hidden">
+  <div id="landing" style="position:relative;">
+    <div class="landing-card" style="max-width:380px;">
+      <svg class="brand-star" viewBox="0 0 24 24" fill="none"><path d="M12 1l2.6 6.9L21.5 9l-5.4 4.6L17.8 21 12 17.1 6.2 21l1.7-7.4L2.5 9l6.9-1.1L12 1z" stroke="#E4C270" stroke-width="1.4" stroke-linejoin="round"/></svg>
+      <h1 style="font-size:1.5rem;">അഡ്മിൻ ലോഗിൻ</h1>
+      <div class="card" style="text-align:left;margin-top:20px;">
+        <div class="field">
+          <label>പിൻ കോഡ് (PIN)</label>
+          <input type="password" id="admin-pin-input" placeholder="000000" maxlength="6">
+        </div>
+        <p id="admin-login-err" class="err-msg hidden">തെറ്റായ PIN. വീണ്ടും ശ്രമിക്കുക.</p>
+        <button class="btn-primary" style="width:100%;margin-top:6px;" onclick="tryAdminLogin()">പ്രവേശിക്കുക</button>
+        <p style="font-size:.75rem;color:#9a9a9a;margin-top:12px;text-align:center;"></p>
+      </div>
+      <button class="sp-back" style="margin-top:16px;" onclick="goLanding()">&larr; തിരികെ</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ADMIN SHELL ============ -->
+<div id="admin-shell" class="hidden">
+  <div class="sidebar">
+    <div class="brand">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 1l2.6 6.9L21.5 9l-5.4 4.6L17.8 21 12 17.1 6.2 21l1.7-7.4L2.5 9l6.9-1.1L12 1z" stroke="#E4C270" stroke-width="1.4" stroke-linejoin="round"/></svg>
+      <span class="brand-name" id="sidebar-inst-name">Madrasa Admin</span>
+    </div>
+    <button class="nav-item" data-view="dashboard" onclick="setAdminView('dashboard')">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+      ഡാഷ്ബോർഡ്
+    </button>
+    <button class="nav-item" data-view="institution" onclick="setAdminView('institution')">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg>
+      ഇൻസ്റ്റിറ്റ്യൂഷൻ ഡീറ്റെയിൽസ്
+    </button>
+    <button class="nav-item" data-view="students" onclick="setAdminView('students')">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.4"/><path d="M4 21c1.2-4.2 4.4-6.5 8-6.5s6.8 2.3 8 6.5"/></svg>
+      സ്റ്റുഡന്റ് ഡീറ്റെയിൽസ്
+    </button>
+    <button class="nav-item" data-view="subjects" onclick="setAdminView('subjects')">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5V6a2 2 0 012-2h11a2 2 0 012 2v13.5M6 4v16M6 20h13"/></svg>
+      സബ്ജക്റ്റ് ആഡിംഗ്
+    </button>
+    <button class="nav-item" data-view="marks" onclick="setAdminView('marks')">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h9"/></svg>
+      മാർക്ക് എൻട്രി
+    </button>
+    <button class="nav-item" data-view="results" onclick="setAdminView('results')">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18M8 17V10M13 17V6M18 17v-4"/></svg>
+      റിസൾട്ട്
+    </button>
+    <button class="nav-item" data-view="resultView" onclick="setAdminView('resultView')">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      റിസൽട്ട് വ്യൂ
+    </button>
+    <div class="sidebar-foot">
+      <button class="logout-btn" onclick="goLanding()">&larr; പുറത്തുകടക്കുക</button>
+    </div>
+  </div>
+  <div class="admin-main" id="admin-main"></div>
+</div>
+
+<!-- ============ STUDENT PORTAL ============ -->
+<div id="student-portal" class="hidden">
+  <div class="sp-wrap">
+    <button class="sp-back" onclick="goLanding()">&larr; തിരികെ</button>
+    <div class="sp-head">
+      <h1 id="sp-inst-name">Madrasa Result Portal</h1>
+      <p>Register Number ഉപയോഗിച്ച് റിസൾട്ട് പരിശോധിക്കുക</p>
+    </div>
+    <div class="sp-search">
+      <input type="text" id="sp-regno-input" placeholder="രജിസ്റ്റർ നമ്പർ ഉദാ: AD025">
+      <button class="btn-gold" onclick="studentLookup()">പരിശോധിക്കുക</button>
+    </div>
+    <p id="sp-err" class="err-msg hidden" style="text-align:center;color:#ffd7d0;"></p>
+    <div id="sp-result" class="sp-result hidden"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+/* ==================================================================
+   STATE + STORAGE
+================================================================== */
+let DB = {
+  institution: { name:"BISHARATHUL ISLAM MADRASA", address:"", phone:"", email:"", classTeacher:"", academicYear:"2026" },
+  students: [],   // {regNo, name, className, parentName, dob, photo}
+  subjects: {},   // { className: [ {name, max} ] }
+  marks: {}       // { regNo: { subjectName: obtained } }
+};
+let currentAdminView = 'dashboard';
+
+async function storageGet(key, fallback){
+  try{
+    const r = await window.storage.get(key, true);
+    return r && r.value ? JSON.parse(r.value) : fallback;
+  }catch(e){ return fallback; }
+}
+async function storageSet(key, value){
+  try{ await window.storage.set(key, JSON.stringify(value), true); return true; }
+  catch(e){ console.error('storage set failed', key, e); showToast('സേവ് ചെയ്യുന്നതിൽ പിശക് സംഭവിച്ചു'); return false; }
+}
+async function loadAllData(){
+  const [inst, stu, subj, mk] = await Promise.all([
+    storageGet('institution', DB.institution),
+    storageGet('students', []),
+    storageGet('subjects', {}),
+    storageGet('marks', {})
+  ]);
+  DB.institution = inst || DB.institution;
+  DB.students = stu || [];
+  DB.subjects = subj || {};
+  DB.marks = mk || {};
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+/* ==================================================================
+   NAVIGATION
+================================================================== */
+function hideAll(){
+  ['landing','admin-login','admin-shell','student-portal'].forEach(id=>{
+    document.getElementById(id).classList.add('hidden');
+  });
+}
+function goLanding(){
+  hideAll();
+  document.getElementById('landing').classList.remove('hidden');
+  refreshBrandLabels();
+}
+function showAdminLogin(){
+  hideAll();
+  document.getElementById('admin-login').classList.remove('hidden');
+  document.getElementById('admin-pin-input').value='';
+  document.getElementById('admin-login-err').classList.add('hidden');
+}
+function tryAdminLogin(){
+  const val = document.getElementById('admin-pin-input').value;
+  if(val === '9530'){
+    hideAll();
+    document.getElementById('admin-shell').classList.remove('hidden');
+    setAdminView('dashboard');
+  } else {
+    document.getElementById('admin-login-err').classList.remove('hidden');
+  }
+}
+function showStudentPortal(){
+  hideAll();
+  document.getElementById('student-portal').classList.remove('hidden');
+  document.getElementById('sp-result').classList.add('hidden');
+  document.getElementById('sp-err').classList.add('hidden');
+  document.getElementById('sp-regno-input').value='';
+  refreshBrandLabels();
+}
+function refreshBrandLabels(){
+  const n = DB.institution.name || 'Madrasa Management System';
+  document.getElementById('landing-inst-name').textContent = n;
+  document.getElementById('sp-inst-name').textContent = n;
+  document.getElementById('sidebar-inst-name').textContent = n;
+}
+
+/* ==================================================================
+   GRADE LOGIC
+================================================================== */
+function gradeFromPercent(p){
+  if(p>=90) return {label:'A+', css:'grade-Aplus'};
+  if(p>=75) return {label:'A', css:'grade-A'};
+  if(p>=60) return {label:'B+', css:'grade-Bplus'};
+  if(p>=45) return {label:'B', css:'grade-B'};
+  if(p>=35) return {label:'C', css:'grade-C'};
+  return {label:'D', css:'grade-D'};
+}
+function computeResult(regNo){
+  const student = DB.students.find(s=>s.regNo===regNo);
+  if(!student) return null;
+  const subs = DB.subjects[student.className] || [];
+  const marksObj = DB.marks[regNo] || {};
+  let totalObt=0, totalMax=0;
+  const rows = subs.map(su=>{
+    const obt = marksObj[su.name] !== undefined ? Number(marksObj[su.name]) : null;
+    totalMax += Number(su.max);
+    if(obt !== null) totalObt += obt;
+    return { subject: su.name, max: su.max, obtained: obt };
+  });
+  const percent = totalMax>0 ? (totalObt/totalMax*100) : 0;
+  const grade = gradeFromPercent(percent);
+  return { student, rows, totalObt, totalMax, percent, grade };
+}
+
+/* ==================================================================
+   ADMIN VIEW ROUTER
+================================================================== */
+function setAdminView(view){
+  currentAdminView = view;
+  document.querySelectorAll('.nav-item').forEach(b=>{
+    b.classList.toggle('active', b.dataset.view===view);
+  });
+  renderAdminView();
+}
+function renderAdminView(){
+  const main = document.getElementById('admin-main');
+  if(currentAdminView==='dashboard') return renderDashboard(main);
+  if(currentAdminView==='institution') return renderInstitution(main);
+  if(currentAdminView==='students') return renderStudents(main);
+  if(currentAdminView==='subjects') return renderSubjects(main);
+  if(currentAdminView==='marks') return renderMarks(main);
+  if(currentAdminView==='results') return renderResults(main);
+  if(currentAdminView==='resultView') return renderResultView(main);
+}
+
+/* ---------------- Dashboard ---------------- */
+function renderDashboard(main){
+  const totalStudents = DB.students.length;
+  const totalSubjects = Object.values(DB.subjects).reduce((a,l)=>a+l.length,0);
+  const totalClasses = Object.keys(DB.subjects).length;
+  const withPhoto = DB.students.filter(s=>s.photo).length;
+  main.innerHTML = `
+    <div class="admin-topbar">
+      <div><h2>ഡാഷ്ബോർഡ്</h2><p>${esc(DB.institution.name)} — മൊത്തം സ്ഥിതിവിവരം</p></div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="n">${totalStudents}</div><div class="l">ആകെ വിദ്യാർത്ഥികൾ</div></div>
+      <div class="stat-card"><div class="n">${totalClasses}</div><div class="l">ക്ലാസുകൾ</div></div>
+      <div class="stat-card"><div class="n">${totalSubjects}</div><div class="l">ആകെ സബ്ജക്റ്റുകൾ</div></div>
+      <div class="stat-card"><div class="n">${withPhoto}/${totalStudents||0}</div><div class="l">ഫോട്ടോ അപ്‌ലോഡ് ചെയ്തവർ</div></div>
+    </div>
+    <div class="card">
+      <p class="section-title">വേഗത്തിലുള്ള വഴി</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn-outline" onclick="setAdminView('students')">+ വിദ്യാർത്ഥിയെ ചേർക്കുക</button>
+        <button class="btn-outline" onclick="setAdminView('marks')">മാർക്ക് നൽകുക</button>
+        <button class="btn-outline" onclick="setAdminView('resultView')">റിസൾട്ട് / സർട്ടിഫിക്കറ്റ്</button>
+      </div>
+    </div>
+  `;
+}
+
+/* ---------------- Institution details ---------------- */
+function renderInstitution(main){
+  const i = DB.institution;
+  main.innerHTML = `
+    <div class="admin-topbar"><div><h2>ഇൻസ്റ്റിറ്റ്യൂഷൻ ഡീറ്റെയിൽസ്</h2><p>സർട്ടിഫിക്കറ്റിലും പോർട്ടലിലും കാണിക്കുന്ന വിവരങ്ങൾ</p></div></div>
+    <div class="card">
+      <div class="form-grid">
+        <div class="field"><label>സ്ഥാപനത്തിന്റെ പേര്</label><input id="f-inst-name" value="${escAttr(i.name)}"></div>
+        <div class="field"><label>അക്കാദമിക് വർഷം</label><input id="f-inst-year" value="${escAttr(i.academicYear)}"></div>
+        <div class="field"><label>വിലാസം</label><input id="f-inst-address" value="${escAttr(i.address)}"></div>
+        <div class="field"><label>ഫോൺ നമ്പർ</label><input id="f-inst-phone" value="${escAttr(i.phone)}"></div>
+        <div class="field"><label>ഇമെയിൽ</label><input id="f-inst-email" value="${escAttr(i.email)}"></div>
+        <div class="field"><label>ക്ലാസ് ടീച്ചർ (സർട്ടിഫിക്കറ്റിൽ)</label><input id="f-inst-teacher" value="${escAttr(i.classTeacher)}"></div>
+      </div>
+      <button class="btn-primary" onclick="saveInstitution()">സേവ് ചെയ്യുക</button>
+    </div>
+  `;
+}
+async function saveInstitution(){
+  DB.institution = {
+    name: document.getElementById('f-inst-name').value.trim() || 'Madrasa',
+    academicYear: document.getElementById('f-inst-year').value.trim(),
+    address: document.getElementById('f-inst-address').value.trim(),
+    phone: document.getElementById('f-inst-phone').value.trim(),
+    email: document.getElementById('f-inst-email').value.trim(),
+    classTeacher: document.getElementById('f-inst-teacher').value.trim(),
+  };
+  await storageSet('institution', DB.institution);
+  refreshBrandLabels();
+  showToast('ഇൻസ്റ്റിറ്റ്യൂഷൻ ഡീറ്റെയിൽസ് സേവ് ചെയ്തു');
+}
+
+/* ---------------- Students ---------------- */
+function classOptions(selected){
+  const classes = Object.keys(DB.subjects);
+  if(classes.length===0) return `<option value="">ആദ്യം ക്ലാസ് / സബ്ജക്റ്റ് ചേർക്കുക</option>`;
+  return classes.map(c=>`<option value="${escAttr(c)}" ${c===selected?'selected':''}>${esc(c)}</option>`).join('');
+}
+function renderStudents(main){
+  main.innerHTML = `
+    <div class="admin-topbar"><div><h2>സ്റ്റുഡന്റ് ഡീറ്റെയിൽസ്</h2><p>വിദ്യാർത്ഥികളെ ചേർക്കുക, എഡിറ്റ് ചെയ്യുക</p></div></div>
+    <div class="card" style="margin-bottom:20px;">
+      <p class="section-title">പുതിയ വിദ്യാർത്ഥി</p>
+      <div class="form-grid">
+        <div class="field"><label>പേര്</label><input id="f-stu-name" placeholder="വിദ്യാർത്ഥിയുടെ പേര്"></div>
+        <div class="field"><label>രജിസ്റ്റർ നമ്പർ</label><input id="f-stu-reg" placeholder="ഉദാ: AD025"></div>
+        <div class="field"><label>ക്ലാസ്</label><select id="f-stu-class">${classOptions()}</select></div>
+        <div class="field"><label>രക്ഷിതാവിന്റെ പേര്</label><input id="f-stu-parent" placeholder="ഐച്ഛികം"></div>
+      </div>
+      <button class="btn-primary" onclick="addStudent()">വിദ്യാർത്ഥിയെ ചേർക്കുക</button>
+    </div>
+    <div class="card">
+      <p class="section-title">വിദ്യാർത്ഥികളുടെ ലിസ്റ്റ് (${DB.students.length})</p>
+      ${DB.students.length===0 ? `<div class="empty">ഇതുവരെ വിദ്യാർത്ഥികളെ ചേർത്തിട്ടില്ല</div>` : `
+      <table>
+        <thead><tr><th></th><th>പേര്</th><th>രജി. നമ്പർ</th><th>ക്ലാസ്</th><th>ഫോട്ടോ</th><th></th></tr></thead>
+        <tbody>
+        ${DB.students.map(s=>`
+          <tr>
+            <td>${s.photo ? `<img class="avatar" src="${s.photo}">` : `<div class="avatar-placeholder">${esc((s.name||'?').charAt(0))}</div>`}</td>
+            <td>${esc(s.name)}</td>
+            <td>${esc(s.regNo)}</td>
+            <td>${esc(s.className)}</td>
+            <td>${s.photo ? `<button class="btn-outline" style="padding:5px 10px;font-size:.75rem;" onclick="resetPhoto('${escAttr(s.regNo)}')">ഫോട്ടോ റീസെറ്റ്</button>` : '<span style="color:#aaa;font-size:.8rem;">ഇല്ല</span>'}</td>
+            <td><button class="btn-danger" onclick="deleteStudent('${escAttr(s.regNo)}')">നീക്കം ചെയ്യുക</button></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`}
+    </div>
+  `;
+}
+async function addStudent(){
+  const name = document.getElementById('f-stu-name').value.trim();
+  const regNo = document.getElementById('f-stu-reg').value.trim();
+  const className = document.getElementById('f-stu-class').value;
+  const parentName = document.getElementById('f-stu-parent').value.trim();
+  if(!name || !regNo){ showToast('പേരും രജിസ്റ്റർ നമ്പറും നൽകുക'); return; }
+  if(DB.students.some(s=>s.regNo===regNo)){ showToast('ഈ രജിസ്റ്റർ നമ്പർ നിലവിലുണ്ട്'); return; }
+  DB.students.push({ name, regNo, className, parentName, photo:null });
+  await storageSet('students', DB.students);
+  showToast('വിദ്യാർത്ഥിയെ ചേർത്തു');
+  renderStudents(document.getElementById('admin-main'));
+}
+async function deleteStudent(regNo){
+  if(!confirm('ഈ വിദ്യാർത്ഥിയെ നീക്കം ചെയ്യണോ?')) return;
+  DB.students = DB.students.filter(s=>s.regNo!==regNo);
+  delete DB.marks[regNo];
+  await storageSet('students', DB.students);
+  await storageSet('marks', DB.marks);
+  showToast('നീക്കം ചെയ്തു');
+  renderStudents(document.getElementById('admin-main'));
+}
+async function resetPhoto(regNo){
+  const s = DB.students.find(x=>x.regNo===regNo);
+  if(!s) return;
+  s.photo = null;
+  await storageSet('students', DB.students);
+  showToast('ഫോട്ടോ റീസെറ്റ് ചെയ്തു');
+  renderStudents(document.getElementById('admin-main'));
+}
+
+/* ---------------- Subjects ---------------- */
+function renderSubjects(main){
+  const classes = Object.keys(DB.subjects);
+  main.innerHTML = `
+    <div class="admin-topbar"><div><h2>സബ്ജക്റ്റ് ആഡിംഗ്</h2><p>ക്ലാസ് അടിസ്ഥാനത്തിൽ സബ്ജക്റ്റുകൾ ചേർക്കുക</p></div></div>
+    <div class="card" style="margin-bottom:20px;">
+      <p class="section-title">പുതിയ ക്ലാസ് / സബ്ജക്റ്റ്</p>
+      <div class="inline-form">
+        <div class="field"><label>ക്ലാസിന്റെ പേര്</label><input id="f-subj-class" placeholder="ഉദാ: II" list="existing-classes">
+          <datalist id="existing-classes">${classes.map(c=>`<option value="${escAttr(c)}">`).join('')}</datalist>
+        </div>
+        <div class="field"><label>സബ്ജക്റ്റ്</label><input id="f-subj-name" placeholder="ഉദാ: Quran"></div>
+        <div class="field" style="max-width:110px;"><label>മാക്സ് മാർക്ക്</label><input id="f-subj-max" type="number" value="100"></div>
+        <button class="btn-primary" onclick="addSubject()">ചേർക്കുക</button>
+      </div>
+    </div>
+    ${classes.length===0 ? `<div class="card"><div class="empty">ഇതുവരെ സബ്ജക്റ്റുകൾ ചേർത്തിട്ടില്ല</div></div>` :
+      classes.map(c=>`
+      <div class="card" style="margin-bottom:16px;">
+        <p class="section-title">ക്ലാസ്: ${esc(c)}</p>
+        <div>
+        ${(DB.subjects[c]||[]).map(su=>`
+          <span class="tag-chip">${esc(su.name)} <small style="color:#888;">(${su.max})</small> <button onclick="deleteSubject('${escAttr(c)}','${escAttr(su.name)}')">&times;</button></span>
+        `).join('') || '<span style="color:#999;font-size:.85rem;">സബ്ജക്റ്റുകൾ ഇല്ല</span>'}
+        </div>
+      </div>`).join('')
+    }
+  `;
+}
+async function addSubject(){
+  const cls = document.getElementById('f-subj-class').value.trim();
+  const name = document.getElementById('f-subj-name').value.trim();
+  const max = Number(document.getElementById('f-subj-max').value) || 100;
+  if(!cls || !name){ showToast('ക്ലാസും സബ്ജക്റ്റും നൽകുക'); return; }
+  if(!DB.subjects[cls]) DB.subjects[cls] = [];
+  if(DB.subjects[cls].some(s=>s.name.toLowerCase()===name.toLowerCase())){ showToast('ഈ സബ്ജക്റ്റ് നിലവിലുണ്ട്'); return; }
+  DB.subjects[cls].push({name, max});
+  await storageSet('subjects', DB.subjects);
+  showToast('സബ്ജക്റ്റ് ചേർത്തു');
+  renderSubjects(document.getElementById('admin-main'));
+}
+async function deleteSubject(cls, name){
+  DB.subjects[cls] = (DB.subjects[cls]||[]).filter(s=>s.name!==name);
+  await storageSet('subjects', DB.subjects);
+  showToast('സബ്ജക്റ്റ് നീക്കം ചെയ്തു');
+  renderSubjects(document.getElementById('admin-main'));
+}
+
+/* ---------------- Marks entry ---------------- */
+function renderMarks(main, selectedClass, selectedReg){
+  selectedClass = selectedClass || '';
+  const classes = Object.keys(DB.subjects);
+  const studentsInClass = DB.students.filter(s=>s.className===selectedClass);
+  const subs = DB.subjects[selectedClass] || [];
+  const existingMarks = selectedReg ? (DB.marks[selectedReg]||{}) : {};
+  main.innerHTML = `
+    <div class="admin-topbar"><div><h2>മാർക്ക് എൻട്രി</h2><p>വിദ്യാർത്ഥിയെ തിരഞ്ഞെടുത്ത് മാർക്ക് നൽകുകയോ എഡിറ്റ് ചെയ്യുകയോ ചെയ്യാം</p></div></div>
+    <div class="card">
+      <div class="inline-form" style="margin-bottom:22px;">
+        <div class="field">
+          <label>ക്ലാസ്</label>
+          <select id="f-marks-class" onchange="onMarksClassChange()">
+            <option value="">-- ക്ലാസ് തിരഞ്ഞെടുക്കുക --</option>
+            ${classes.map(c=>`<option value="${escAttr(c)}" ${c===selectedClass?'selected':''}>${esc(c)}</option>`).join('')}
+          </select>
+        </div>
+        <div class="field">
+          <label>വിദ്യാർത്ഥി</label>
+          <select id="f-marks-student" onchange="onMarksStudentChange()">
+            <option value="">-- വിദ്യാർത്ഥിയെ തിരഞ്ഞെടുക്കുക --</option>
+            ${studentsInClass.map(s=>`<option value="${escAttr(s.regNo)}" ${s.regNo===selectedReg?'selected':''}>${esc(s.name)} (${esc(s.regNo)})</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      ${(!selectedClass || subs.length===0) ? `<div class="empty">ക്ലാസ് തിരഞ്ഞെടുക്കുക. ("സബ്ജക്റ്റ് ആഡിംഗ്" പേജിൽ ആദ്യം സബ്ജക്റ്റുകൾ ചേർക്കുക)</div>` :
+      !selectedReg ? `<div class="empty">മാർക്ക് നൽകാൻ ഒരു വിദ്യാർത്ഥിയെ തിരഞ്ഞെടുക്കുക</div>` : `
+      <table style="margin-bottom:16px;">
+        <thead><tr><th>സബ്ജക്റ്റ്</th><th>മാക്സ് മാർക്ക്</th><th>ലഭിച്ച മാർക്ക്</th></tr></thead>
+        <tbody>
+        ${subs.map(su=>`
+          <tr>
+            <td>${esc(su.name)}</td>
+            <td>${su.max}</td>
+            <td><input type="number" min="0" max="${su.max}" style="width:100px;padding:6px 8px;border:1.5px solid #DDD3B8;border-radius:7px;" id="mark-${cssSafe(su.name)}" value="${existingMarks[su.name] !== undefined ? existingMarks[su.name] : ''}"></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+      <button class="btn-primary" onclick="saveMarks('${escAttr(selectedClass)}','${escAttr(selectedReg)}')">${existingMarks && Object.keys(existingMarks).length ? 'മാർക്ക് അപ്ഡേറ്റ് ചെയ്യുക' : 'മാർക്ക് സേവ് ചെയ്യുക'}</button>
+      `}
+    </div>
+  `;
+}
+function onMarksClassChange(){
+  const cls = document.getElementById('f-marks-class').value;
+  renderMarks(document.getElementById('admin-main'), cls, '');
+}
+function onMarksStudentChange(){
+  const cls = document.getElementById('f-marks-class').value;
+  const reg = document.getElementById('f-marks-student').value;
+  renderMarks(document.getElementById('admin-main'), cls, reg);
+}
+async function saveMarks(cls, regNo){
+  const subs = DB.subjects[cls] || [];
+  const entry = {};
+  subs.forEach(su=>{
+    const el = document.getElementById('mark-'+cssSafe(su.name));
+    const val = el ? el.value : '';
+    if(val !== '') entry[su.name] = Math.max(0, Math.min(Number(su.max), Number(val)));
+  });
+  DB.marks[regNo] = entry;
+  await storageSet('marks', DB.marks);
+  showToast('മാർക്ക് സേവ് ചെയ്തു');
+  renderMarks(document.getElementById('admin-main'), cls, regNo);
+}
+
+/* ---------------- Results (class-wise) ---------------- */
+function renderResults(main, selectedClass){
+  const classes = Object.keys(DB.subjects);
+  selectedClass = selectedClass || (classes[0]||'');
+  const studentsInClass = DB.students.filter(s=>s.className===selectedClass);
+  const results = studentsInClass.map(s=>computeResult(s.regNo)).filter(Boolean)
+                    .sort((a,b)=>b.totalObt-a.totalObt);
+  main.innerHTML = `
+    <div class="admin-topbar"><div><h2>റിസൾട്ട്</h2><p>ക്ലാസ് അടിസ്ഥാനത്തിലുള്ള റിസൾട്ട് സംഗ്രഹം</p></div></div>
+    <div class="card">
+      <div class="field" style="max-width:260px;">
+        <label>ക്ലാസ് തിരഞ്ഞെടുക്കുക</label>
+        <select onchange="renderResults(document.getElementById('admin-main'), this.value)">
+          ${classes.map(c=>`<option value="${escAttr(c)}" ${c===selectedClass?'selected':''}>${esc(c)}</option>`).join('')}
+        </select>
+      </div>
+      ${results.length===0 ? `<div class="empty">ഈ ക്ലാസിൽ റിസൾട്ട് ലഭ്യമല്ല</div>` : `
+      <table>
+        <thead><tr><th>റാങ്ക്</th><th>പേര്</th><th>രജി. നമ്പർ</th><th>ആകെ</th><th>ശതമാനം</th><th>ഗ്രേഡ്</th></tr></thead>
+        <tbody>
+        ${results.map((r,idx)=>`
+          <tr>
+            <td>${idx+1}</td>
+            <td>${esc(r.student.name)}</td>
+            <td>${esc(r.student.regNo)}</td>
+            <td>${r.totalObt}/${r.totalMax}</td>
+            <td>${r.percent.toFixed(1)}%</td>
+            <td><span class="grade-pill ${r.grade.css}">${r.grade.label}</span></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`}
+    </div>
+  `;
+}
+
+/* ---------------- Result View (search + certificate) ---------------- */
+function renderResultView(main){
+  main.innerHTML = `
+    <div class="admin-topbar"><div><h2>റിസൽട്ട് വ്യൂ</h2><p>രജിസ്റ്റർ നമ്പർ / പേര് നൽകി വിശദമായ റിസൾട്ട് കാണുക</p></div></div>
+    <div class="card" style="margin-bottom:18px;">
+      <div class="inline-form">
+        <div class="field"><label>രജിസ്റ്റർ നമ്പർ അല്ലെങ്കിൽ പേര്</label><input id="f-rv-search" placeholder="ഉദാ: AD025 അല്ലെങ്കിൽ Muhammed"></div>
+        <button class="btn-primary" onclick="doResultViewSearch()">തിരയുക</button>
+      </div>
+      <div id="rv-output"></div>
+    </div>
+  `;
+}
+function doResultViewSearch(){
+  const q = document.getElementById('f-rv-search').value.trim().toLowerCase();
+  const out = document.getElementById('rv-output');
+  if(!q){ out.innerHTML=''; return; }
+  const student = DB.students.find(s=>s.regNo.toLowerCase()===q || s.name.toLowerCase().includes(q));
+  if(!student){ out.innerHTML = `<div class="empty">വിദ്യാർത്ഥിയെ കണ്ടെത്താനായില്ല</div>`; return; }
+  const r = computeResult(student.regNo);
+  out.innerHTML = `
+    <div style="margin-top:18px;padding-top:18px;border-top:1px dashed #DDD3B8;">
+      <div class="sp-student-head">
+        ${student.photo ? `<img class="sp-avatar" src="${student.photo}">` : `<div class="avatar-placeholder" style="width:60px;height:60px;font-size:1.2rem;">${esc(student.name.charAt(0))}</div>`}
+        <div>
+          <h3>${esc(student.name)}</h3>
+          <p>ക്ലാസ്: ${esc(student.className)} &nbsp;•&nbsp; രജി. നമ്പർ: ${esc(student.regNo)}</p>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>സബ്ജക്റ്റ്</th><th>മാക്സ്</th><th>ലഭിച്ചത്</th></tr></thead>
+        <tbody>
+        ${r.rows.map(row=>`<tr><td>${esc(row.subject)}</td><td>${row.max}</td><td>${row.obtained===null?'—':row.obtained}</td></tr>`).join('')}
+        </tbody>
+      </table>
+      <div class="sp-summary">
+        <div class="sp-sum-card"><div class="v">${r.totalObt}/${r.totalMax}</div><div class="k">ആകെ മാർക്ക്</div></div>
+        <div class="sp-sum-card"><div class="v">${r.percent.toFixed(1)}%</div><div class="k">ശതമാനം</div></div>
+        <div class="sp-sum-card"><div class="v"><span class="grade-pill ${r.grade.css}">${r.grade.label}</span></div><div class="k">ഗ്രേഡ്</div></div>
+      </div>
+      <button class="btn-gold" onclick='openCertificate(${JSON.stringify(student.regNo)})'>സർട്ടിഫിക്കറ്റ് ഡൗൺലോഡ് ചെയ്യുക</button>
+    </div>
+  `;
+}
+
+/* ==================================================================
+   STUDENT PORTAL LOGIC
+================================================================== */
+function studentLookup(){
+  const reg = document.getElementById('sp-regno-input').value.trim();
+  const errEl = document.getElementById('sp-err');
+  const resEl = document.getElementById('sp-result');
+  errEl.classList.add('hidden');
+  resEl.classList.add('hidden');
+  if(!reg) return;
+  const student = DB.students.find(s=>s.regNo.toLowerCase()===reg.toLowerCase());
+  if(!student){
+    errEl.textContent = 'ഈ രജിസ്റ്റർ നമ്പറിൽ വിദ്യാർത്ഥിയെ കണ്ടെത്താനായില്ല';
+    errEl.classList.remove('hidden');
+    return;
+  }
+  renderStudentResult(student);
+}
+function renderStudentResult(student){
+  const r = computeResult(student.regNo);
+  const resEl = document.getElementById('sp-result');
+  resEl.classList.remove('hidden');
+  resEl.innerHTML = `
+    <div class="sp-student-head">
+      ${student.photo ? `<img class="sp-avatar" src="${student.photo}">` : `<div class="sp-avatar" style="display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--green-deep);">${esc(student.name.charAt(0))}</div>`}
+      <div>
+        <h3>${esc(student.name)}</h3>
+        <p>ക്ലാസ്: ${esc(student.className)} &nbsp;•&nbsp; രജി. നമ്പർ: ${esc(student.regNo)}</p>
+      </div>
+    </div>
+    ${!student.photo ? `
+    <div class="upload-box">
+      <p>&#128247; നിങ്ങളുടെ ഫോട്ടോ ഇതുവരെ അപ്‌ലോഡ് ചെയ്തിട്ടില്ല. ഒരു തവണ അപ്‌ലോഡ് ചെയ്താൽ മതി.</p>
+      <input type="file" accept="image/*" id="sp-photo-input">
+      <br><br>
+      <button class="btn-gold" onclick="uploadStudentPhoto('${escAttr(student.regNo)}')">ഫോട്ടോ അപ്‌ലോഡ് ചെയ്യുക</button>
+    </div>` : ''}
+    <table>
+      <thead><tr><th>സബ്ജക്റ്റ്</th><th>മാക്സ്</th><th>ലഭിച്ചത്</th></tr></thead>
+      <tbody>
+      ${r.rows.length===0 ? `<tr><td colspan="3" style="text-align:center;color:#999;">സബ്ജക്റ്റുകൾ ലഭ്യമല്ല</td></tr>` :
+        r.rows.map(row=>`<tr><td>${esc(row.subject)}</td><td>${row.max}</td><td>${row.obtained===null?'—':row.obtained}</td></tr>`).join('')}
+      </tbody>
+    </table>
+    <div class="sp-summary">
+      <div class="sp-sum-card"><div class="v">${r.totalObt}/${r.totalMax}</div><div class="k">ആകെ മാർക്ക്</div></div>
+      <div class="sp-sum-card"><div class="v">${r.percent.toFixed(1)}%</div><div class="k">ശതമാനം</div></div>
+      <div class="sp-sum-card"><div class="v"><span class="grade-pill ${r.grade.css}">${r.grade.label}</span></div><div class="k">ഗ്രേഡ്</div></div>
+    </div>
+    <button class="btn-gold" style="width:100%;" onclick='openCertificate(${JSON.stringify(student.regNo)})'>&#127891; സർട്ടിഫിക്കറ്റ് ഡൗൺലോഡ് ചെയ്യുക</button>
+  `;
+}
+function uploadStudentPhoto(regNo){
+  const input = document.getElementById('sp-photo-input');
+  if(!input.files || !input.files[0]){ showToast('ഒരു ഫോട്ടോ തിരഞ്ഞെടുക്കുക'); return; }
+  const file = input.files[0];
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const img = new Image();
+    img.onload = async function(){
+      const maxW = 260;
+      const scale = Math.min(1, maxW/img.width);
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width*scale;
+      canvas.height = img.height*scale;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+      const student = DB.students.find(s=>s.regNo===regNo);
+      if(student){
+        student.photo = dataUrl;
+        await storageSet('students', DB.students);
+        showToast('ഫോട്ടോ അപ്‌ലോഡ് ചെയ്തു');
+        renderStudentResult(student);
+      }
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ==================================================================
+   CERTIFICATE (canvas drawing + download)
+================================================================== */
+function openCertificate(regNo){
+  const r = computeResult(regNo);
+  if(!r) return;
+  const overlay = document.createElement('div');
+  overlay.id = 'cert-modal-overlay';
+  overlay.innerHTML = `
+    <div id="cert-modal" style="position:relative;">
+      <button class="close-x" onclick="document.getElementById('cert-modal-overlay').remove()">&times;</button>
+      <canvas id="cert-canvas" width="1200" height="850"></canvas>
+      <div class="modal-actions">
+        <button class="btn-gold" onclick="downloadCertificate('${escAttr(r.student.name)}')">&#11015; ഡൗൺലോഡ് (jpeg)</button>
+        <button class="btn-outline" onclick="document.getElementById('cert-modal-overlay').remove()">അടയ്ക്കുക</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  drawCertificate(document.getElementById('cert-canvas'), r);
+}
+function drawCertificate(canvas, r){
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const green = '#0B4433', gold = '#C7972B', goldLight='#E4C270', cream='#FBF6EA', ink='#1B231F';
+
+  // background
+  ctx.fillStyle = cream;
+  ctx.fillRect(0,0,W,H);
+
+  // outer thin border
+  ctx.strokeStyle = green;
+  ctx.lineWidth = 3;
+  ctx.strokeRect(24,24,W-48,H-48);
+
+  // inner gold double border
+  ctx.strokeStyle = gold;
+  ctx.lineWidth = 2;
+  ctx.strokeRect(42,42,W-84,H-84);
+  ctx.lineWidth = 1;
+  ctx.strokeRect(50,50,W-100,H-100);
+
+  // corner stars
+  [[80,80],[W-80,80],[80,H-80],[W-80,H-80]].forEach(([cx,cy])=>drawStar(ctx,cx,cy,16,gold));
+
+  // top small star + institution name
+  drawStar(ctx, W/2, 110, 12, gold);
+  ctx.fillStyle = green;
+  ctx.textAlign = 'center';
+  ctx.font = '700 40px Georgia, serif';
+  wrapCenterText(ctx, (DB.institution.name||'MADRASA').toUpperCase(), W/2, 160, W-260, 44);
+
+  ctx.fillStyle = gold;
+  ctx.font = '600 22px Georgia, serif';
+  ctx.save();
+  ctx.letterSpacing = '4px';
+  ctx.fillText('CERTIFICATE OF ACHIEVEMENT', W/2, 215);
+  ctx.restore();
+
+  // divider
+  ctx.strokeStyle = goldLight;
+  ctx.lineWidth = 1.4;
+  ctx.beginPath(); ctx.moveTo(W/2-160,240); ctx.lineTo(W/2-16,240); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(W/2+16,240); ctx.lineTo(W/2+160,240); ctx.stroke();
+  drawDiamond(ctx, W/2, 240, 7, gold);
+
+  // body
+  ctx.fillStyle = ink;
+  ctx.font = 'italic 24px Georgia, serif';
+  ctx.fillText('This is to certify that', W/2, 300);
+
+  ctx.fillStyle = green;
+  ctx.font = '700 52px Georgia, serif';
+  ctx.fillText(r.student.name.toUpperCase(), W/2, 365);
+
+  ctx.strokeStyle = goldLight;
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(W/2-220,382); ctx.lineTo(W/2+220,382); ctx.stroke();
+
+  ctx.fillStyle = ink;
+  ctx.font = '22px Georgia, serif';
+  ctx.fillText(`has successfully passed the Quarterly Examination ${esc(DB.institution.academicYear||'')}.`, W/2, 425);
+
+  // details box
+  const boxY = 470, boxH = 130;
+  ctx.strokeStyle = '#DDD3B8';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(W/2-320, boxY, 640, boxH);
+  const details = [
+    ['Class', r.student.className||'-'],
+    ['Register No.', r.student.regNo],
+    ['Total Marks', r.totalObt+'/'+r.totalMax],
+    ['Percentage', r.percent.toFixed(1)+'%'],
+    ['Grade', r.grade.label],
+    ['Academic Year', DB.institution.academicYear||'-']
+  ];
+  ctx.textAlign = 'left';
+  ctx.font = '600 19px Georgia, serif';
+  details.forEach((d,i)=>{
+    const col = i % 2, row = Math.floor(i/2);
+    const x = W/2 - 300 + col*330;
+    const y = boxY + 45 + row*60;
+    ctx.fillStyle = '#8a8a7a';
+    ctx.font = '13px Arial';
+    ctx.fillText(d[0].toUpperCase(), x, y-18);
+    ctx.fillStyle = green;
+    ctx.font = '700 22px Georgia, serif';
+    ctx.fillText(String(d[1]), x, y+6);
+  });
+
+  // signatures
+  ctx.textAlign='center';
+  ctx.strokeStyle = ink; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(W/2-330,H-140); ctx.lineTo(W/2-150,H-140); ctx.stroke();
+  ctx.fillStyle = ink; ctx.font = '16px Georgia, serif';
+  ctx.fillText(DB.institution.classTeacher || 'Class Teacher', W/2-240, H-115);
+  ctx.fillStyle='#8a8a7a'; ctx.font='13px Arial';
+  ctx.fillText('CLASS TEACHER', W/2-240, H-95);
+
+  // seal
+  ctx.beginPath();
+  ctx.arc(W/2+240, H-160, 46, 0, Math.PI*2);
+  ctx.strokeStyle = gold; ctx.lineWidth = 2.5; ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(W/2+240, H-160, 38, 0, Math.PI*2);
+  ctx.strokeStyle = gold; ctx.lineWidth = 1; ctx.stroke();
+  drawStar(ctx, W/2+240, H-160, 14, gold);
+  ctx.fillStyle = '#8a8a7a'; ctx.font='11px Arial'; ctx.textAlign='center';
+  ctx.fillText('OFFICE SEAL', W/2+240, H-95);
+
+  // footer
+  ctx.fillStyle = '#9a9488';
+  ctx.font = '13px Arial';
+  ctx.fillText(DB.institution.address || '', W/2, H-40);
+}
+function drawStar(ctx,cx,cy,r,color){
+  ctx.save();
+  ctx.translate(cx,cy);
+  ctx.beginPath();
+  for(let i=0;i<8;i++){
+    const ang = (Math.PI/4)*i;
+    const rad = i%2===0 ? r : r*0.45;
+    const x = Math.cos(ang)*rad, y = Math.sin(ang)*rad;
+    if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  }
+  ctx.closePath();
+  ctx.fillStyle = color;
+  ctx.fill();
+  ctx.restore();
+}
+function drawDiamond(ctx,cx,cy,r,color){
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(cx,cy-r); ctx.lineTo(cx+r,cy); ctx.lineTo(cx,cy+r); ctx.lineTo(cx-r,cy);
+  ctx.closePath();
+  ctx.fillStyle = color;
+  ctx.fill();
+  ctx.restore();
+}
+function wrapCenterText(ctx, text, x, y, maxWidth, lineHeight){
+  const words = text.split(' ');
+  let line = '', lines = [];
+  words.forEach(w=>{
+    const test = line + w + ' ';
+    if(ctx.measureText(test).width > maxWidth && line !== ''){
+      lines.push(line); line = w + ' ';
+    } else line = test;
+  });
+  lines.push(line);
+  const startY = y - (lines.length-1)*lineHeight/2;
+  lines.forEach((l,i)=>ctx.fillText(l.trim(), x, startY + i*lineHeight));
+}
+function downloadCertificate(name){
+  const canvas = document.getElementById('cert-canvas');
+  const link = document.createElement('a');
+  link.download = (name || 'certificate').replace(/\\s+/g,'_') + '_certificate.PDF';
+  link.href = canvas.toDataURL('PDF');
+  link.click();
+}
+
+/* ==================================================================
+   UTIL
+================================================================== */
+function esc(s){ return String(s===undefined||s===null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function escAttr(s){ return esc(s).replace(/"/g,'&quot;'); }
+function cssSafe(s){ return String(s).replace(/[^a-zA-Z0-9]/g,'_'); }
+
+/* ==================================================================
+   INIT
+================================================================== */
+(async function init(){
+  await loadAllData();
+  refreshBrandLabels();
+})();
+</script>
+</body>
+</html>
